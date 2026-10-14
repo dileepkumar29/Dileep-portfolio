@@ -55,15 +55,16 @@
         }
 
         .container {
-            width: 90%;
+            width: min(calc(100% - 32px), 1200px);
             max-width: 1200px;
             margin: 0 auto;
-            padding: 0 20px;
+            padding: 0;
         }
 
         section {
-            padding: 100px 0;
+            padding: clamp(64px, 8vw, 100px) 0;
             background: transparent;
+            scroll-margin-top: 88px;
         }
 
         h1,
@@ -77,12 +78,12 @@
         }
 
         h1 {
-            font-size: 3.5rem;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
             color: var(--text);
         }
 
         h2 {
-            font-size: 2.5rem;
+            font-size: clamp(1.8rem, 4vw, 2.5rem);
             text-align: center;
             margin-bottom: 60px;
             position: relative;
@@ -252,21 +253,24 @@
 
         /* Hero Section */
         .hero {
-            height: 100vh;
+            min-height: 100vh;
+            min-height: 100svh;
+            height: auto;
             display: flex;
             align-items: center;
             position: relative;
             overflow: hidden;
             background: linear-gradient(135deg, rgba(14, 25, 41, 0.96), rgba(17, 29, 48, 0.95));
+            padding: 120px 0 60px;
         }
 
         .hero-content {
-            width: 60%;
+            width: min(60%, 720px);
             z-index: 2;
         }
 
         .hero h1 {
-            font-size: 4rem;
+            font-size: clamp(2.5rem, 6vw, 4rem);
             margin-bottom: 10px;
             color: var(--text);
             line-height: 1.1;
@@ -457,7 +461,7 @@
         /* Education Section */
         .education-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
             gap: 30px;
         }
 
@@ -505,7 +509,7 @@
 
         .skills-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
             gap: 30px;
         }
 
@@ -558,7 +562,7 @@
         /* Projects Section */
         .projects-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
             gap: 30px;
         }
 
@@ -609,6 +613,7 @@
 
         .project-links {
             display: flex;
+            flex-wrap: wrap;
             gap: 15px;
             margin: 15px 0;
         }
@@ -752,6 +757,11 @@
             transition: var(--transition);
         }
 
+        .contact-item > div:last-child {
+            min-width: 0;
+            overflow-wrap: anywhere;
+        }
+
         .contact-item:hover .contact-icon {
             transform: scale(1.1);
         }
@@ -889,6 +899,18 @@
 
         /* Responsive Design */
         @media (max-width: 992px) {
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .nav-links li {
+                margin-left: 16px;
+            }
+
+            .nav-links a {
+                font-size: 0.95rem;
+            }
+
             .hero-content {
                 width: 100%;
                 text-align: center;
@@ -919,19 +941,21 @@
             }
         }
 
-        @media (max-width: 768px) {
+        @media (max-width: 900px) {
             .nav-links {
                 position: fixed;
                 top: 80px;
                 left: -100%;
                 width: 100%;
                 height: calc(100vh - 80px);
+                height: calc(100dvh - 80px);
                 background: rgba(11, 21, 38, 0.96);
                 border-top: 1px solid var(--border);
                 flex-direction: column;
                 align-items: center;
                 justify-content: flex-start;
                 padding-top: 50px;
+                overflow-y: auto;
                 transition: var(--transition);
                 box-shadow: 0 10px 20px rgba(7, 16, 28, 0.35);
             }
@@ -976,12 +1000,73 @@
                 font-size: 2rem;
             }
 
+            .hero h1 {
+                font-size: clamp(2.3rem, 8vw, 3rem);
+            }
+
             .projects-container {
                 grid-template-columns: 1fr;
             }
 
             .certifications-container {
                 grid-template-columns: 1fr;
+            }
+
+            .typewriter {
+                width: auto;
+                max-width: 100%;
+                white-space: normal;
+                border-right: 0;
+                animation: none;
+            }
+
+            .hero-btns {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .nav-container {
+                padding: 14px 0;
+            }
+
+            .logo {
+                font-size: clamp(1.15rem, 5vw, 1.5rem);
+            }
+
+            .hero {
+                padding-top: 100px;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .btn {
+                padding: 12px 22px;
+            }
+
+            .education-card,
+            .skill-category,
+            .project-content {
+                padding: 22px;
+            }
+
+            .project-img {
+                height: auto;
+                aspect-ratio: 16 / 9;
+            }
+
+            .contact-container {
+                gap: 30px;
+            }
+
+            .contact-item {
+                padding: 16px;
+            }
+
+            .copyright {
+                overflow-wrap: anywhere;
             }
         }
     </style>
@@ -1342,6 +1427,13 @@
         hamburger.addEventListener('click', () => {
             navLinks.classList.toggle('active');
             hamburger.classList.toggle('active');
+        });
+
+        navLinks.querySelectorAll('a').forEach((link) => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.classList.remove('active');
+            });
         });
 
         // Header scroll effect
